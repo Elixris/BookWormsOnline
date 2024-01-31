@@ -1,0 +1,16 @@
+﻿@page
+@model BookWormsOnline.Pages.IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <h1>Welcome, @User.Identity.Name!</h1>
+
+    <p>First Name: @Model.FirstName</p>
+    <p>Last Name: @Model.LastName</p>
+    <p>Your decrypted credit card number: @Model.DecryptedCreditCard</p>
+    <p>Mobile Number: @Model.MobileNo</p>
+    <p>Billing Address: @Model.BillingAddr</p>
+    <p>Shipping Address: @Model.ShippingAddr</p>
+</div>

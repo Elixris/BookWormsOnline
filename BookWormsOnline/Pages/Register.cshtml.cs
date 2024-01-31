@@ -1,0 +1,112 @@
+using BookWormsOnline.Model;
+using BookWormsOnline.ViewModels;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+
+namespace BookWormsOnline.Pages
+{
+	public class RegisterModel : PageModel
+	{
+		private readonly UserManager<ApplicationUser> userManager;
+		private readonly SignInManager<ApplicationUser> signInManager;
+
+		[BindProperty]
+		public Register RModel { get; set; }
+
+		public RegisterModel(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+		{
+			this.userManager = userManager;
+			this.signInManager = signInManager;
+		}
+
+		public void OnGet()
+		{ }
+
+		public async Task<IActionResult> OnPostAsync()
+		{
+			if (ModelState.IsValid)
+			{
+				var dataProtectionProvider = DataProtectionProvider.Create("EncryptData");
+				var protector = dataProtectionProvider.CreateProtector("MySecretKey");
+				var user = new ApplicationUser()
+				{
+					FirstName = RModel.FirstName,
+					LastName = RModel.LastName,
+					CreditCardNo = protector.Protect(RModel.CreditCardNo),
+					MobileNo = RModel.MobileNo,
+					BillingAddr = RModel.BillingAddr,
+					ShippingAddr = RModel.ShippingAddr,
+					UserName = RModel.Email,
+					Email = RModel.Email
+				};
+				// Check if the email is unique before creating a new user
+				var existingUser = await userManager.FindByEmailAsync(RModel.Email);
+				if (existingUser != null)
+				{
+					ModelState.AddModelError(nameof(RModel.Email), "Email is already in use.");
+					return Page();
+				}
+
+				// Check password complexity
+				var passwordComplexityError = CheckPasswordComplexity(RModel.Password);
+				if (!string.IsNullOrEmpty(passwordComplexityError))
+				{
+					ModelState.AddModelError(nameof(RModel.Password), passwordComplexityError);
+					return Page();
+				}
+
+				
+
+				var result = await userManager.CreateAsync(user, RModel.Password);
+				if (result.Succeeded)
+				{
+					await signInManager.SignInAsync(user, false);
+					return RedirectToPage("Index");
+				}
+
+				foreach (var error in result.Errors)
+				{
+					ModelState.AddModelError("", error.Description);
+				}
+			}
+
+			return Page();
+		}
+
+		private string CheckPasswordComplexity(string password)
+		{
+			const int MinLength = 12;
+
+			if (password.Length < MinLength)
+			{
+				return $"Password must be at least {MinLength} characters long.";
+			}
+
+			if (!Regex.IsMatch(password, "[a-z]"))
+			{
+				return "Password must contain at least one lowercase letter.";
+			}
+
+			if (!Regex.IsMatch(password, "[A-Z]"))
+			{
+				return "Password must contain at least one uppercase letter.";
+			}
+
+			if (!Regex.IsMatch(password, "[0-9]"))
+			{
+				return "Password must contain at least one digit.";
+			}
+
+			if (!Regex.IsMatch(password, "[^a-zA-Z0-9]"))
+			{
+				return "Password must contain at least one special character.";
+			}
+
+			return null; // Password meets complexity requirements
+		}
+	}
+}

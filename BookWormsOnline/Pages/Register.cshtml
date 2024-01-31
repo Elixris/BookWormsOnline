@@ -1,0 +1,81 @@
+﻿@page
+@model BookWormsOnline.Pages.RegisterModel
+@{
+}
+
+<div class="container mt-5">
+
+	<div class="row justify-content-center align-items-center">
+
+		<div class="col-sm-12 col-md-12 col-lg-4">
+			<h1 class="mb-3">Register </h1>
+
+			<form method="post" enctype="multipart/form-data">
+				<div asp-validation-summary="All" class="text-danger"></div>
+
+				<div class="mb-3">
+					<label class="form-label" asp-for="RModel.FirstName">First Name</label>
+					<input type="Text" asp-for="RModel.FirstName" class="form-control" />
+					<span asp-validaton-for="RModel.FirstName" class="text-danger"></span>
+				</div>
+
+				<div class="mb-3">
+					<label class="form-label" asp-for="RModel.LastName">Last Name</label>
+					<input type="Text" asp-for="RModel.LastName" class="form-control" />
+					<span asp-validaton-for="RModel.LastName" class="text-danger"></span>
+				</div>
+				<div class="mb-3">
+					<label class="form-label" asp-for="RModel.CreditCardNo">Credit Card No.</label>
+					<input type="Text" asp-for="RModel.CreditCardNo" class="form-control" />
+					<span asp-validaton-for="RModel.CreditCardNo" class="text-danger"></span>
+				</div>
+
+				<div class="mb-3">
+					<label class="form-label" asp-for="RModel.MobileNo">Mobile No.</label>
+					<input type="Text" asp-for="RModel.MobileNo" class="form-control" />
+					<span asp-validaton-for="RModel.MobileNo" class="text-danger"></span>
+				</div>
+
+				<div class="mb-3">
+					<label class="form-label" asp-for="RModel.BillingAddr">Billing Address</label>
+					<input type="Text" asp-for="RModel.BillingAddr" class="form-control" />
+					<span asp-validaton-for="RModel.BillingAddr" class="text-danger"></span>
+				</div>
+
+				<div class="mb-3">
+					<label class="form-label" asp-for="RModel.ShippingAddr">Shipping Address</label>
+					<input type="Text" asp-for="RModel.ShippingAddr" class="form-control" />
+					<span asp-validaton-for="RModel.ShippingAddr" class="text-danger"></span>
+				</div>
+
+				<div class="mb-3">
+					<label class="form-label" asp-for="RModel.Email">Email Address</label>
+					<input type="Text" asp-for="RModel.Email" class="form-control" />
+					<span asp-validaton-for="RModel.Email" class="text-danger"></span>
+				</div>
+
+				<div class="mb-3">
+					<label class="form-label" asp-for="RModel.Password">Password</label>
+					<input type="password" asp-for="RModel.Password" class="form-control" />
+					<span asp-validaton-for="RModel.Password" class="text-danger"></span>
+				</div>
+
+				<div class="mb-3">
+					<label class="form-label" asp-for="RModel.CfmPassword">Confirm Password</label>
+					<input type="password" asp-for="RModel.CfmPassword" class="form-control" />
+					<span asp-validaton-for="RModel.CfmPassword" class="text-danger"></span>
+				</div>
+
+				<div class="mb-3">
+					<label class="form-label" asp-for="RModel.ProfileImage">Upload Profile Image (.jpg only)</label>
+					<input type="file" name="ProfileImage" accept=".jpg" class="form-control" />
+					<!-- You can add additional attributes for validation if needed -->
+				</div>
+
+				<div class="mb-3">
+					<button type="submit" class="btn btn-primary">Register</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
