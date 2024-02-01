@@ -14,6 +14,7 @@ namespace BookWormsOnline.Pages
 	{
 		private readonly ILogger<IndexModel> _logger;
 		private readonly UserManager<ApplicationUser> _userManager;
+        
 
 		public IndexModel(ILogger<IndexModel> logger, UserManager<ApplicationUser> userManager)
 		{

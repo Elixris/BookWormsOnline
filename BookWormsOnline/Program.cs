@@ -14,12 +14,6 @@ builder.Services.ConfigureApplicationCookie(Config =>
 {
 	Config.LoginPath = "/Login";
 });
-builder.Services.AddSession(options =>
-{
-	options.IdleTimeout = TimeSpan.FromMinutes(30);
-	options.Cookie.HttpOnly = true;
-	options.Cookie.IsEssential = true;
-});
 // In ConfigureServices method of Startup.cs
 builder.Services.Configure<IdentityOptions>(options =>
 {
@@ -33,13 +27,24 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
             options.LoginPath = "/Login"; // Specify the login page
             options.LogoutPath = "/Logout"; // Specify the logout page
             options.AccessDeniedPath = "/AccessDenied"; // Specify the access denied page
-            options.ExpireTimeSpan = TimeSpan.FromMinutes(30); // Session timeout
+            options.ExpireTimeSpan = TimeSpan.FromSeconds(5); // Session timeout
             options.SlidingExpiration = true; // Reset timeout on each request
         });
 
 // If you need to detect multiple logins
 //builder.Services.AddSingleton<IUserIdProvider, NameUserIdProvider>();
 //builder.Services.AddSignalR();
+
+builder.Services.AddSingleton<ApplicationUser, ApplicationUser>();
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromSeconds(5);
+});
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Login"; // Set your login page path
+});
 
 
 
@@ -59,7 +64,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-app.UseStatusCodePagesWithRedirects("/errors/{0}");
+app.UseStatusCodePagesWithRedirects("/errors/	{0}");
 
 app.UseRouting();
 
