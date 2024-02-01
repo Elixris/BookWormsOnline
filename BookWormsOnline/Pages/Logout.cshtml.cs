@@ -21,7 +21,7 @@ namespace BookWormsOnline.Pages
             await signInManager.SignOutAsync();
             HttpContext.Session.Clear();
 
-            return RedirectToAction("Login");
+            return RedirectToPage("Login");
         }
         public async Task<IActionResult> OnPostDontLogoutAsync()
         {
