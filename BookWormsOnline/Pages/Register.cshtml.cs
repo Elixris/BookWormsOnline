@@ -30,7 +30,26 @@ namespace BookWormsOnline.Pages
 		{
 			if (ModelState.IsValid)
 			{
-				var dataProtectionProvider = DataProtectionProvider.Create("EncryptData");
+                if (!Regex.IsMatch(RModel.MobileNo, @"^\d{8}$"))
+                {
+                    ModelState.AddModelError(nameof(RModel.MobileNo), "Mobile number must be 8 digits.");
+                    return Page();
+                }
+
+                // Additional validation for credit card number
+                if (!Regex.IsMatch(RModel.CreditCardNo, @"^[345]\d{15}$"))
+                {
+                    ModelState.AddModelError(nameof(RModel.CreditCardNo), "Invalid credit card number.");
+                    return Page();
+                }
+
+                // Additional validation for shipping and billing addresses
+                if (RModel.ShippingAddr.Length < 10 || RModel.BillingAddr.Length < 10)
+                {
+                    ModelState.AddModelError("", "Shipping and billing addresses must be at least 10 characters long.");
+                    return Page();
+                }
+                var dataProtectionProvider = DataProtectionProvider.Create("EncryptData");
 				var protector = dataProtectionProvider.CreateProtector("MySecretKey");
 				var user = new ApplicationUser()
 				{
@@ -77,36 +96,53 @@ namespace BookWormsOnline.Pages
 			return Page();
 		}
 
-		private string CheckPasswordComplexity(string password)
-		{
-			const int MinLength = 12;
+        private string CheckPasswordComplexity(string password)
+        {
+            const int MinLength = 12;
 
-			if (password.Length < MinLength)
-			{
-				return $"Password must be at least {MinLength} characters long.";
-			}
+            if (password.Length < MinLength)
+            {
+                return $"Password must be at least {MinLength} characters long.";
+            }
 
-			if (!Regex.IsMatch(password, "[a-z]"))
-			{
-				return "Password must contain at least one lowercase letter.";
-			}
+            if (!Regex.IsMatch(password, "[a-z]"))
+            {
+                return "Password must contain at least one lowercase letter.";
+            }
 
-			if (!Regex.IsMatch(password, "[A-Z]"))
-			{
-				return "Password must contain at least one uppercase letter.";
-			}
+            if (!Regex.IsMatch(password, "[A-Z]"))
+            {
+                return "Password must contain at least one uppercase letter.";
+            }
 
-			if (!Regex.IsMatch(password, "[0-9]"))
-			{
-				return "Password must contain at least one digit.";
-			}
+            if (!Regex.IsMatch(password, "[0-9]"))
+            {
+                return "Password must contain at least one digit.";
+            }
 
-			if (!Regex.IsMatch(password, "[^a-zA-Z0-9]"))
-			{
-				return "Password must contain at least one special character.";
-			}
+            if (!Regex.IsMatch(password, "[^a-zA-Z0-9]"))
+            {
+                return "Password must contain at least one special character.";
+            }
 
-			return null; // Password meets complexity requirements
-		}
-	}
+            if (IsPasswordTooCommon(password))
+            {
+                return "Password is too common. Choose a more unique password.";
+            }
+
+            return null; // Password meets complexity requirements
+        }
+
+        private bool IsPasswordTooCommon(string password)
+        {
+            // List of common passwords (replace with a more comprehensive list)
+            var commonPasswords = new List<string>
+    {
+        "password", "123456", "qwerty", "admin", "letmein", "welcome", "123abc"
+    };
+
+            // Convert the password to lowercase for case-insensitive comparison
+            return commonPasswords.Contains(password.ToLower());
+        }
+    }
 }

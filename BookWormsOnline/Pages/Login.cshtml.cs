@@ -16,6 +16,7 @@ namespace BookWormsOnline.Pages
         private readonly SignInManager<ApplicationUser> signInManager;
         private const string RecaptchaSecretKey = "6LeKsGMpAAAAAMshWfuVh5CoBB8IpcOBt6LmCreM";
         private const string RecaptchaSiteKey = "6LeKsGMpAAAAACgUJ6eN8KfMv6rjnURY2GgPTwUr";
+        
 
         public LoginModel(SignInManager<ApplicationUser> signInManager)
         {
@@ -28,6 +29,7 @@ namespace BookWormsOnline.Pages
 
         public async Task<IActionResult> OnPostAsync()
         {
+
             if (ModelState.IsValid)
             {
                 // Verify reCAPTCHA
@@ -42,6 +44,7 @@ namespace BookWormsOnline.Pages
                 var identityResult = await signInManager.PasswordSignInAsync(LModel.Email, LModel.Password, LModel.RememberMe, false);
                 if (identityResult.Succeeded)
                 {
+
                     return RedirectToPage("Index");
                 }
                 ModelState.AddModelError("", "Username or password incorrect");
